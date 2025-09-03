@@ -1,0 +1,175 @@
+/* Warna utama oranye khas SMK PGRI Kuwu (sesuaikan jika perlu) */
+:root {
+    --primary-color: #FF8C00;
+    --secondary-color: #FFA500;
+    --accent-color: #FFD700;
+    --text-color: #333;
+    --background-color: #FFF3E0;
+    --hadir-color: #4CAF50;
+    --izin-color: #F44336;
+    --sudah-color: #2196F3;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6; /* Keterbacaan teks */
+}
+
+header {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 1em 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 150px; /* Ukuran logo lebih kecil untuk mobile */
+    margin-bottom: 10px;
+}
+
+main {
+    padding: 20px;
+}
+
+#absensi-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#absensi-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#absensi-form input[type="text"],
+#absensi-form input[type="date"],
+#absensi-form select,
+#absensi-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#absensi-form button {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%; /* Tombol mengisi lebar di mobile */
+}
+
+#absensi-form button:hover {
+    background-color: darken(var(--secondary-color), 10%);
+}
+
+#status-absensi {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#absensi-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#absensi-table th,
+#absensi-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#absensi-table th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#absensi-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+footer {
+    text-align: center;
+    padding: 1em 0;
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Styling untuk notifikasi */
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.5s, top 0.5s;
+}
+
+.notification.show {
+    top: 50px;
+    opacity: 1;
+}
+
+.sudah-submit {
+    background-color: #f0f0f0;
+    font-style: italic;
+}
+
+/* Media Queries untuk layar yang lebih besar */
+@media (min-width: 768px) {
+    .logo img {
+        width: 100px; /* Ukuran logo lebih besar di desktop */
+    }
+
+    #absensi-form button {
+        width: auto; /* Ukuran tombol otomatis di desktop */
+    }
+
+    #absensi-table th,
+    #absensi-table td {
+        padding: 12px; /* Padding lebih besar di desktop */
+    }
+}
+
+@media (min-width: 992px) {
+    main {
+        padding: 30px; /* Padding lebih besar di layar lebar */
+    }
+
+    #absensi-form {
+        padding: 30px; /* Padding form lebih besar di layar lebar */
+    }
+
+    #status-absensi {
+        padding: 30px; /* Padding status lebih besar di layar lebar */
+    }
+}

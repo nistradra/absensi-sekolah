@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <title>Absensi Sekolah</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="logo-sekolah.png" alt="Logo Sekolah">
+            <h1>Absensi Sekolah</h1>
+        </div>
+    </header>
+
+    <main>
+        <div id="notification" class="notification">
+            Anda Berhasil Absen 😊
+        </div>
+
+        <section id="absensi-form">
+            <h2>Form Absensi</h2>
+            <form id="form-absensi">
+                <label for="nama">Nama:</label>
+                <input type="text" id="nama" name="nama" placeholder="Isi dengan nama lengkap" required><br><br>
+
+                <label for="jurusan">Jurusan:</label>
+                <select id="jurusan" name="jurusan" required>
+                    <option value="">Pilih Jurusan</option>
+                    <option value="TKJ">Teknik Komputer dan Jaringan (TKJ)</option>
+                    <option value="TKRO">Teknik Kendaraan Ringan Otomotif (TKRO)</option>
+                    <option value="MPLB">Manajemen Perkantoran dan Layanan Bisnis (MPLB)</option>
+                    <option value="TKP">Teknik Konstruksi dan Perumahan (TKP)</option>
+                    <option value="AKL">Akuntansi dan Keuangan Lembaga (AKL)</option>
+                </select><br><br>
+
+                <label for="kelas">Kelas:</label>
+                <select id="kelas" name="kelas" required>
+                    <option value="">Pilih Kelas</option>
+                    <option value="X">X</option>
+                    <option value="XI">XI</option>
+                    <option value="XII">XII</option>
+                    <!-- Tambahkan pilihan kelas lainnya di sini -->
+                </select><br><br>
+
+                <label for="tanggal">Tanggal:</label>
+                <input type="date" id="tanggal" name="tanggal" value="" readonly required>
+                <span id="waktu"></span><br><br>
+
+                <label for="status">Status:</label>
+                <select id="status" name="status" required>
+                    <option value="">Pilih Status</option>
+                    <option value="hadir">Hadir</option>
+                    <option value="izin">Izin</option>
+                </select><br><br>
+
+                <div id="keterangan-izin" style="display: none;">
+                    <label for="keterangan">Keterangan Izin:</label>
+                    <textarea id="keterangan" name="keterangan" rows="4" cols="50"></textarea><br><br>
+                </div>
+
+                <button type="submit">Submit Absensi</button>
+            </form>
+        </section>
+
+        <section id="status-absensi">
+            <h2>Status Absensi</h2>
+            <table id="absensi-table">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Kelas</th>
+                        <th>Jurusan</th>
+                        <th>Status</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data absensi akan ditampilkan di sini -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 absen peserta didik SMK PGRI KUWU</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
