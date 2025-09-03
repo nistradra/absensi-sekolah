@@ -41,7 +41,7 @@ document.getElementById('form-absensi').addEventListener('submit', function(even
     // Reset form (opsional)
     document.getElementById('form-absensi').reset();
 
-    // Nonaktifkan form setelah submit
+    // Perbarui tampilan dan status form
     checkAbsensi();
 });
 
