@@ -14,31 +14,35 @@ document.getElementById('form-absensi').addEventListener('submit', function(even
     }
 
     // Simpan data ke localStorage dengan timestamp
-    const absensiKey = `absensi-${nama}-${tanggal}`; // Key unik untuk setiap siswa dan tanggal
+    const absensiKey = `absensi-${tanggal}`; // Key unik untuk tanggal
+    let absensiData = JSON.parse(localStorage.getItem(absensiKey)) || []; // Ambil data yang sudah ada atau buat array baru
     const now = new Date().getTime(); // Dapatkan timestamp saat ini
     const expiry = now + 24 * 60 * 60 * 1000; // Timestamp 24 jam dari sekarang
-    const absensiData = {
+
+    // Tambahkan data absensi baru ke array
+    absensiData.push({
         nama: nama,
         jurusan: jurusan,
         kelas: kelas,
         status: status,
         keterangan: keterangan,
-        tanggal: tanggal, // Simpan tanggal
+        tanggal: tanggal,
         expiry: expiry
-    };
-    localStorage.setItem(absensiKey, JSON.stringify(absensiData));
+    });
+
+    localStorage.setItem(absensiKey, JSON.stringify(absensiData)); // Simpan array ke localStorage
 
     // Tampilkan notifikasi
     showNotification();
 
-    // Tambahkan data ke tabel
-    addRowToTable(nama, kelas, jurusan, status, keterangan, tanggal);
+    // Tampilkan data absensi di tabel
+    loadExistingAbsensiData();
 
     // Reset form (opsional)
     document.getElementById('form-absensi').reset();
 
     // Nonaktifkan form setelah submit
-    disableForm();
+    checkAbsensi();
 });
 
 document.getElementById('status').addEventListener('change', function(event) {
@@ -50,34 +54,34 @@ document.getElementById('status').addEventListener('change', function(event) {
     }
 });
 
-// Fungsi untuk memeriksa apakah siswa sudah submit absensi dan menghapus jika sudah expired
+// Fungsi untuk memeriksa apakah siswa sudah submit absensi dan menghapus data yang sudah expired
 function checkAbsensi() {
     const nama = document.getElementById('nama').value;
     const tanggal = document.getElementById('tanggal').value;
-    const absensiKey = `absensi-${nama}-${tanggal}`;
+    const absensiKey = `absensi-${tanggal}`; // Key unik untuk tanggal
     const absensiDataString = localStorage.getItem(absensiKey);
 
     if (absensiDataString) {
         const absensiData = JSON.parse(absensiDataString);
         const now = new Date().getTime();
 
-        if (now > absensiData.expiry) {
-            // Jika sudah expired, hapus dari localStorage dan tabel
-            localStorage.removeItem(absensiKey);
-            removeRowFromTable(absensiData.nama, absensiData.tanggal);
-            enableForm(); // Aktifkan kembali form
-            // Reset nama field
-            document.getElementById('nama').value = '';
+        // Filter data yang sudah expired
+        const updatedAbsensiData = absensiData.filter(item => item.expiry > now);
+
+        // Simpan kembali data yang sudah difilter ke localStorage
+        localStorage.setItem(absensiKey, JSON.stringify(updatedAbsensiData));
+
+        // Periksa apakah siswa sudah absen hari ini
+        const sudahAbsen = updatedAbsensiData.some(item => item.nama === nama);
+
+        if (sudahAbsen) {
+            disableForm(); // Nonaktifkan form jika sudah absen
         } else {
-            // Jika belum expired DAN nama sama, nonaktifkan form
-            if (absensiData.nama === nama) {
-                disableForm();
-            } else {
-                enableForm();
-                document.getElementById('nama').value = '';
-            }
-            markRowAsSubmitted(absensiData.nama, absensiData.tanggal);
+            enableForm(); // Aktifkan form jika belum absen
         }
+
+        // Tampilkan data absensi di tabel
+        loadExistingAbsensiData();
     } else {
         enableForm(); // Aktifkan form jika data tidak ditemukan
     }
@@ -102,39 +106,7 @@ function addRowToTable(nama, kelas, jurusan, status, keterangan, tanggal) {
 
     const keteranganCell = newRow.insertCell();
     keteranganCell.textContent = keterangan;
-
 }
-
-// Fungsi untuk menandai baris sebagai sudah disubmit
-function markRowAsSubmitted(nama, tanggal) {
-   const tableBody = document.querySelector('#absensi-table tbody');
-    for (let i = 0; i < tableBody.rows.length; i++) {
-        const row = tableBody.rows[i];
-        const namaCell = row.cells[0].textContent;
-        const tanggalFormated = document.getElementById('tanggal').value
-
-        if (namaCell === nama && tanggalFormated === tanggal) {
-            row.classList.add('sudah-submit');
-            break;
-        }
-    }
-}
-
-// Fungsi untuk menghapus baris dari tabel
-function removeRowFromTable(nama, tanggal) {
-    const tableBody = document.querySelector('#absensi-table tbody');
-    for (let i = 0; i < tableBody.rows.length; i++) {
-        const row = tableBody.rows[i];
-        const namaCell = row.cells[0].textContent;
-        const tanggalFormated = document.getElementById('tanggal').value
-
-       if (namaCell === nama && tanggalFormated === tanggal) {
-            tableBody.deleteRow(i);
-            break;
-        }
-    }
-}
-
 
 // Fungsi untuk mengaktifkan form
 function enableForm() {
@@ -185,33 +157,26 @@ window.onload = function() {
     // Update waktu setiap detik
     updateWaktu();
 
-    // Panggil checkAbsensi setelah tanggal di-set
-    checkAbsensi();
-
     // Load existing absensi data from localStorage
     loadExistingAbsensiData();
+
+    // Panggil checkAbsensi setelah tanggal di-set
+    checkAbsensi();
 };
 
 function loadExistingAbsensiData() {
     const tableBody = document.querySelector('#absensi-table tbody');
-    tableBody.innerHTML = ''; // Clear existing table data
+    tableBody.innerHTML = ''; // Bersihkan data tabel yang ada
 
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.startsWith('absensi-')) {
-            const absensiDataString = localStorage.getItem(key);
-            if (absensiDataString) {
-                const absensiData = JSON.parse(absensiDataString);
-                const now = new Date().getTime();
+    const tanggal = document.getElementById('tanggal').value;
+    const absensiKey = `absensi-${tanggal}`;
+    const absensiDataString = localStorage.getItem(absensiKey);
 
-                if (now > absensiData.expiry) {
-                    // If expired, remove from localStorage
-                    localStorage.removeItem(key);
-                } else {
-                    // If not expired, add to table
-                    addRowToTable(absensiData.nama, absensiData.kelas, absensiData.jurusan, absensiData.status, absensiData.keterangan, absensiData.tanggal);
-                }
-            }
-        }
+    if (absensiDataString) {
+        const absensiData = JSON.parse(absensiDataString);
+
+        absensiData.forEach(item => {
+            addRowToTable(item.nama, item.kelas, item.jurusan, item.status, item.keterangan, item.tanggal);
+        });
     }
 }
